@@ -31,7 +31,7 @@ public class Labyrinth {
                         width * fieldDimensions.width,
                         height * fieldDimensions.height,
                         fieldDimensions);
-                gview.setPreferredSize(new Dimension(
+                gview.setPreferredSize(new Dimension( // für swing
                         width * fieldDimensions.width,
                         height * fieldDimensions.height));
                 world.registerView(gview);
@@ -49,6 +49,16 @@ public class Labyrinth {
                 controller.getContentPane().add(gview);
                 // pack() is needed before JFrame size can be calculated.
                 controller.pack();
+
+                // Calculate size of window by size of insets (titlebar + border) and size of
+                // graphical view.
+                Insets insets = controller.getInsets();
+
+                int windowX = width * fieldDimensions.width + insets.left + insets.right;
+                int windowY = height * fieldDimensions.height + insets.bottom + insets.top;
+                Dimension size = new Dimension(windowX, windowY);
+                controller.setSize(size);
+                controller.setMinimumSize(size);
                 controller.setVisible(true);
             }
         });
