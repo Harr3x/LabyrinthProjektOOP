@@ -6,5 +6,7 @@ public enum FieldType {
     PLAYER,
     GOAL,
     KEY,
-    START
+    START,
+    ENEMY
+
 }
