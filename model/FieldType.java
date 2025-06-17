@@ -7,6 +7,7 @@ public enum FieldType {
     GOAL,
     KEY,
     START,
-    ENEMY
+    ENEMY,
+    DOT
 
 }

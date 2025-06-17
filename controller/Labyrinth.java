@@ -19,7 +19,7 @@ public class Labyrinth {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 // Dimension of the game board (10x10).
-                int width = 50;
+                int width = 28;
                 int height = 30;
                 // Create a new game world.
                 World world = new World(width, height);
@@ -43,22 +43,12 @@ public class Labyrinth {
 
                 // Create controller and initialize JFrame.
                 Controller controller = new Controller(world);
-                controller.setTitle("Square Move Practice");
+                controller.setTitle("Pic-Man");
                 controller.setResizable(false);
                 controller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 controller.getContentPane().add(gview);
                 // pack() is needed before JFrame size can be calculated.
                 controller.pack();
-
-                // Calculate size of window by size of insets (titlebar + border) and size of
-                // graphical view.
-                Insets insets = controller.getInsets();
-
-                int windowX = width * fieldDimensions.width + insets.left + insets.right;
-                int windowY = height * fieldDimensions.height + insets.bottom + insets.top;
-                Dimension size = new Dimension(windowX, windowY);
-                controller.setSize(size);
-                controller.setMinimumSize(size);
                 controller.setVisible(true);
             }
         });

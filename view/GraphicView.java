@@ -62,7 +62,15 @@ public class GraphicView extends JPanel implements View {
 							y * fieldDimension.height,
 							fieldDimension.width,
 							fieldDimension.height);
-				} 
+				} else if (fields[x][y] == model.FieldType.PLAYER) {
+					g.setColor(Color.YELLOW);
+					g.fillOval(
+							x * fieldDimension.width,
+							y * fieldDimension.height,
+							fieldDimension.width,
+							fieldDimension.height);
+				}
+
 			}
 		}
 		// Paint Start
@@ -72,9 +80,6 @@ public class GraphicView extends JPanel implements View {
 				world.getStartY() * fieldDimension.height,
 				fieldDimension.width,
 				fieldDimension.height);
-		// Paint Player
-		g.setColor(Color.YELLOW);
-		g.fillOval(player.x, player.y, player.width, player.height);
 		// Paint Enemy
 		g.setColor(Color.MAGENTA); // z.B. für Gegner
 		for (Enemy enemy : world.getEnemies()) {
@@ -85,7 +90,6 @@ public class GraphicView extends JPanel implements View {
         	fieldDimension.height
     		);
 		}
-							
 	}
 	
 

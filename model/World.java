@@ -39,25 +39,7 @@ public class World {
 		this.width = width;
 		this.height = height;
 		this.fields = new FieldType[width][height];
-		// Build the field
-		for (int x = 1; x<width-1; x++) { // geändert weil sonst empty unfd wall ? probleme beim setzen von start und goal
-			for (int y = 1; y<height-1; y++) {
-				fields[x][y] = FieldType.EMPTY;
-
-			}
-		}
-		// Build the walls
-		for (int x = 0; x<width; x++) {
-			fields[x][0] = FieldType.WALL;
-			fields[x][height-1] = FieldType.WALL;
-		}
-		for (int y = 0; y<height; y++) {
-			fields[0][y] = FieldType.WALL;
-			fields[width-1][y] = FieldType.WALL;
-		}
-
-		// Your labyrinth walls here
-		walls_inside(10,5);
+		build_maze();
 
 		randomStartGoal();
 		playerX= startX;
@@ -104,8 +86,8 @@ public class World {
 	 * @param playerX the player's x position.
 	 */
 	public void setPlayerX(int playerX) {
-		playerX = Math.max(0, playerX);
-		playerX = Math.min(getWidth() - 1, playerX);
+		//playerX = Math.max(0, playerX);
+		//playerX = Math.min(getWidth() - 1, playerX);
 		this.playerX = playerX;
 		
 		//updateViews();
@@ -121,12 +103,12 @@ public class World {
 	public int getPlayerY() {
 		return playerY;
 	}
+	
 	/**
 	 * Returns the field.
 	 *
 	 * @return the field.
 	 */
-
 	public FieldType[][] getFields(){
 		return fields;
 	}
@@ -137,8 +119,8 @@ public class World {
 	 * @param playerY the player's y position.
 	 */
 	public void setPlayerY(int playerY) {
-		playerY = Math.max(0, playerY);
-		playerY = Math.min(getHeight() - 1, playerY);
+		//playerY = Math.max(0, playerY);
+		//playerY = Math.min(getHeight() - 1, playerY);
 		this.playerY = playerY;
 		
 		updateViews();
@@ -183,56 +165,71 @@ public class World {
 	public void randomStartGoal() {
 		Random rand = new Random();
 
-		int startX_1, startY_1, goalX, goalY;
+		int startX, startY, goalX, goalY;
 
 		do {
-			startX_1 = rand.nextInt(width);
-			startY_1 = rand.nextInt(height);
-		} while (fields[startX_1][startY_1] != FieldType.EMPTY);
+			startX = rand.nextInt(width);
+			startY = rand.nextInt(height);
+		} while (fields[startX][startY] != FieldType.DOT);
 
 		do {
 			goalX = rand.nextInt(width);
 			goalY = rand.nextInt(height);
-		} while (fields[goalX][goalY] != FieldType.EMPTY  && Math.abs(goalX-startX_1)+Math.abs(goalY-startY_1)<50); //warum 50);
+		} while (fields[goalX][goalY] != FieldType.DOT  && Math.abs(goalX-startX)+Math.abs(goalY-startY)<50); //warum 50);
 
-
-
-		//setStartX(startX_1);
-		//setStartY(startY_1);
-		startX = startX_1;
-		startY = startY_1;
+		setStartX(startX);
+		setStartY(startY);
+		//startX = startX_1;
+		//tartY = startY_1;
 		fields[startX][startY] = FieldType.START;
 		fields[goalX][goalY] = FieldType.GOAL;
 		updateViews();
 	}
 
-	public void walls_inside(int walls, int wall_length) {
-		Random rand_walls = new Random();
-		int walls_inside = 0;
-		int odd=0;
-		while (walls_inside < walls) {
-			odd +=1;
-			walls_inside++;
-			int x = rand_walls.nextInt(width-2)+1;
-			int y = rand_walls.nextInt(height-2)+1;
+	public void build_maze() {
+		int[][] maze = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+		{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1},
+		{1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1},
+		{1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1},
+		{1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1},
+		{1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1},
+		{2,2,2,2,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,2,2,2,2},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2,1,1,0,0,0,0,0,0,0,0,0,0},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{2,2,2,2,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,2,2,2,2},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+		{1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+		{1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1},
+		{1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1},
+		{1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1},
+		{1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1},
+		{1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1},
+		{1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    };
 
-			for (int i = 0; i < wall_length; i++) {
-				if (odd % 2 == 0 ) {
-					if (fields[x][y + i] == FieldType.WALL && y-1>0) {
-						fields[x][y - i] = FieldType.WALL;
-					} else if (y + i < height){
-						fields[x][y + i] = FieldType.WALL;
-					}
-				} else {
-						if (x + i < width && fields[x+i][y] == FieldType.WALL && x-1 > 0) {
-							fields[x-i][y] = FieldType.WALL;
-						} else if (x + i < width){
-							fields[x+i][y] = FieldType.WALL;
-						}
-					}
+    	for (int y = 0; y < maze.length; y++) {
+        	for (int x = 0; x < maze[0].length; x++) {
+				
+            	fields[x][y] = (maze[y][x] == 1) ? FieldType.WALL : FieldType.DOT;
+				if (maze[y][x] == 2){
+					fields[x][y] = FieldType.EMPTY;
 				}
-			}
-		}
+    		}
+		}	
+	}
 
 	public void setEnemies(int count_enemies){
 		enemies.clear();
@@ -243,7 +240,7 @@ public class World {
 			do { 
 				enemiesX = rand_enemies.nextInt(width - 2)+1;
 				enemiesY = rand_enemies.nextInt(height -2) +1 ;
-			} while (fields[enemiesX][enemiesY] != FieldType.EMPTY || (enemiesX == playerX && enemiesY == playerY));
+			} while (fields[enemiesX][enemiesY] != FieldType.DOT || (enemiesX == playerX && enemiesY == playerY));
 			enemies.add(new Enemy(enemiesX, enemiesY));
 			fields[enemiesX][enemiesY]=FieldType.ENEMY;
 		}
@@ -263,13 +260,20 @@ public class World {
 	public void movePlayer(Direction direction) {	
 		// The direction tells us exactly how much we need to move along
 		// every direction
-		fields[getPlayerX()][getPlayerY()] = FieldType.EMPTY;
+		// [ ] TODO: When player steps on dots, then update score
+		int oldPositionX = getPlayerX();
+		int oldPositionY = getPlayerY();
+		
 		int newPositionX = getPlayerX()+direction.deltaX;
 		int newPositionY = getPlayerY() + direction.deltaY;
 
-		if (0 <= newPositionX && newPositionX < width && 0 <= newPositionY && newPositionY < height && fields[newPositionX][newPositionY] != FieldType.WALL) {
+		if (fields[newPositionX][newPositionY] != FieldType.WALL) {
 			if (fields[newPositionX][newPositionY] == FieldType.GOAL) {
-				//System.exit(0);
+				fields[oldPositionX][oldPositionY] = FieldType.EMPTY;
+				fields[newPositionX][newPositionY] = FieldType.PLAYER;
+				setPlayerX(newPositionX);
+				setPlayerY(newPositionY);
+				updateViews();
 				int choice = JOptionPane.showOptionDialog(
 						null,
 						" Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
@@ -286,28 +290,42 @@ public class World {
 					System.exit(0);
 				}
 			}
+			fields[oldPositionX][oldPositionY] = FieldType.EMPTY;
 			fields[newPositionX][newPositionY] = FieldType.PLAYER;
 			setPlayerX(newPositionX);
 			setPlayerY(newPositionY);
 			updateViews();
+			moveEnemies();
 		}
-		moveEnemies();
+		
 	}
 
 
 	public void restart() {
-
-		for (int x = 1; x < width - 1; x++) {
+		System.out.println("Restarting the game...");
+		System.out.println("Start position: " + startX + ", " + startY);
+		System.out.println("Player position: " + playerX + ", " + playerY);
+		// Reset the world
+		for (int x = 0; x < width -1; x++) {
 			for (int y = 1; y < height - 1; y++) {
 				fields[x][y] = FieldType.EMPTY;
 			}
 		}
-		walls_inside(10,8);
+
+		build_maze();
 
 		randomStartGoal();
-		playerX=startX;
-		playerY=startY;
+		playerX = startX;
+		playerY = startY; 
+		System.out.println("Start position: " + startX + ", " + startY);
+		System.out.println("Player position: " + playerX + ", " + playerY);
+		setPlayerX(playerX);
+		setPlayerY(playerY);
+		System.out.println("Start position: " + startX + ", " + startY);
+		System.out.println("Player position: " + playerX + ", " + playerY);
+		//Place player in the world
 		fields[playerX][playerY]= FieldType.PLAYER;
+		setEnemies(5);
 
 		updateViews();
 	}
@@ -339,6 +357,7 @@ public class World {
 			if (enemyX >0 && enemyX < (width-1) && enemyY >0 && enemyY < (height-1) && fields[enemyX][enemyY] != FieldType.WALL && fields[enemyX][enemyY] != FieldType.ENEMY){
 				enemy.setEnemyX(enemyX);
 				enemy.setEnemyY(enemyY);
+				// fields[enemyX][enemyY] = FieldType.ENEMY;
 			}
 			if (enemy.getX() == playerX && enemy.getY() == playerY) {
 				int choice = JOptionPane.showOptionDialog(
@@ -357,7 +376,7 @@ public class World {
 					System.exit(0);
 				}
 			}
-			fields[enemyX][enemyY] = FieldType.ENEMY;
+			
 		}
 		updateViews();
 

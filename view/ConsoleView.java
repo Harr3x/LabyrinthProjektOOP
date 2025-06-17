@@ -19,13 +19,15 @@ public class ConsoleView implements View {
 		for (int y = 0; y < fields[0].length; y++) {
 			for (int x = 0; x < fields.length; x++) {
 				if (fields[x][y] == FieldType.PLAYER){
-					System.out.print("O");
+					System.out.print("P");
 				} else if (fields[x][y] == FieldType.WALL){
-					System.out.print("'");
+					System.out.print("#");
 				} else if (x == world.getStartX() && y == world.getStartY()){
 					System.out.print("S");
 				} else if (fields[x][y] == FieldType.GOAL){
 					System.out.print("G");
+				} else if (fields[x][y] == FieldType.ENEMY){
+					System.out.print("E");
 				} else {
 					System.out.print(".");
 				}
