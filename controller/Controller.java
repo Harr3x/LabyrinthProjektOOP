@@ -5,13 +5,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
 
 import javax.swing.JFrame;
 
 import model.Direction;
 import model.World;
-import view.View;
 
 /**
  * Our controller listens for key events on the main window.
@@ -20,7 +18,6 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 
 	/** The world that is updated upon every key press. */
 	private World world;
-	private List<View> views;
 
 	/**
 	 * Creates a new instance.

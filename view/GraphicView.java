@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import model.Enemy;
 import model.World;
 
 import java.awt.image.BufferedImage;
@@ -29,7 +28,6 @@ public class GraphicView extends JPanel implements View {
 
 	private Dimension fieldDimension;
 	private World world;
-	private int powerup = 0;
 
 	private BufferedImage playerImage;
 	private Map<String, BufferedImage> enemyImages = new HashMap<>();
