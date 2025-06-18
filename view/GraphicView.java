@@ -148,7 +148,7 @@ public class GraphicView extends JPanel implements View {
 		g.setColor(Color.BLACK);
 		((Graphics2D) g).fillRoundRect(wallX, wallY, wallW, wallH, arc, arc);
 		g.setColor(Color.BLUE);
-		((Graphics2D) g).setStroke(new java.awt.BasicStroke(1.5f));
+		((Graphics2D) g).setStroke(new java.awt.BasicStroke(0.8f));
 		((Graphics2D) g).drawRoundRect(wallX, wallY, wallW, wallH, arc, arc);
 		((Graphics2D) g).setStroke(new java.awt.BasicStroke(1));
 	}
