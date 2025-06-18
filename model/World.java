@@ -272,39 +272,34 @@ public class World {
 	 * @param direction where to move.
 	 */
 	public void movePlayer(Direction direction) {	
-		
-		int newPositionX = getPlayerX()+ direction.deltaX;
-		int newPositionY = getPlayerY() + direction.deltaY;
+    int newPositionX = (getPlayerX() + direction.deltaX + width) % width;
+    int newPositionY = (getPlayerY() + direction.deltaY + height) % height;
 
-		if (fields[newPositionX][newPositionY] != FieldType.WALL) {
-			setPlayerX(newPositionX);
-			setPlayerY(newPositionY);
-			moveEnemies();
-			updateViews();
-			if (newPositionX == getGoalX() && newPositionY == getGoalY()) {
-				setPlayerX(newPositionX);
-				setPlayerY(newPositionY);
-				updateViews();
-				int choice = JOptionPane.showOptionDialog(
-						null,
-						" Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
-						"Spiel gewonnen",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.INFORMATION_MESSAGE,
-						null,
-						new String[] { "Neustart", "Beenden" },
-						"Neustart"
-				);
-				if (choice == JOptionPane.YES_OPTION) {
-					restart();
-				} else if (choice == JOptionPane.NO_OPTION) {
-					System.exit(0);
-				}
+	if (fields[newPositionX][newPositionY] != FieldType.WALL) {
+		setPlayerX(newPositionX);
+		setPlayerY(newPositionY);
+		moveEnemies();
+		if (newPositionX == getGoalX() && newPositionY == getGoalY()) {
+			int choice = JOptionPane.showOptionDialog(
+					null,
+					" Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
+					"Spiel gewonnen",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE,
+					null,
+					new String[] { "Neustart", "Beenden" },
+					"Neustart"
+			);
+			if (choice == JOptionPane.YES_OPTION) {
+				restart();
+			} else if (choice == JOptionPane.NO_OPTION) {
+				System.exit(0);
 			}
-			
+		} else {
+			updateViews();
 		}
-		
 	}
+}
 
 
 	public void restart() {
