@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -30,6 +32,7 @@ public class GraphicView extends JPanel implements View {
 	private int powerup = 0;
 
 	private BufferedImage playerImage;
+	private Map<String, BufferedImage> enemyImages = new HashMap<>();
 
 	public GraphicView(int width, int height, Dimension fieldDimension) {
 		this.WIDTH = width;
@@ -38,11 +41,21 @@ public class GraphicView extends JPanel implements View {
 
 		// Spielerbild laden
 		try {
-			playerImage = ImageIO.read(getClass().getResource("/resources/PlayerIcon.png"));
+			playerImage = ImageIO.read(getClass().getResource("/resources/pacman.png"));
 		} catch (IOException | IllegalArgumentException e) {
 			System.err.println("Spielerbild konnte nicht geladen werden: " + e.getMessage());
 			playerImage = null;
 		}
+		
+		// Gegnerbilder laden
+	    try {
+	        enemyImages.put("red", ImageIO.read(getClass().getResource("/resources/redGhost.png")));
+	        enemyImages.put("pink", ImageIO.read(getClass().getResource("/resources/pinkGhost.png")));
+	        enemyImages.put("cyan", ImageIO.read(getClass().getResource("/resources/cyanGhost.png")));
+	        enemyImages.put("orange", ImageIO.read(getClass().getResource("/resources/orangeGhost.png")));
+	    } catch (IOException | IllegalArgumentException e) {
+	        System.err.println("Gegnerbild konnte nicht geladen werden: " + e.getMessage());
+	    }
 	}
 	/** The rectangle we're moving. */
 	private final Rectangle player = new Rectangle(1, 1);
@@ -71,8 +84,25 @@ public class GraphicView extends JPanel implements View {
 
 	            switch (fields[x][y]) {
 	                case WALL:
+	                    // Größe und Rundung der Wand festlegen
+	                    int margin = Math.max(3, w / 8); // Abstand zum Rand
+	                    int arc = Math.max(8, w / 3);    // Rundungsradius
+
+	                    int wallX = px + margin;
+	                    int wallY = py + margin;
+	                    int wallW = w - 2 * margin;
+	                    int wallH = h - 2 * margin;
+
+	                    // Schwarze Füllung
+	                    g.setColor(Color.BLACK);
+	                    ((Graphics2D) g).fillRoundRect(wallX, wallY, wallW, wallH, arc, arc);
+
+	                    // Blauer Rand
 	                    g.setColor(Color.BLUE);
-	                    g.fillRect(px, py, w, h);
+	                    ((Graphics2D) g).setStroke(new java.awt.BasicStroke(3));
+	                    ((Graphics2D) g).drawRoundRect(wallX, wallY, wallW, wallH, arc, arc);
+	                    // Stroke zurücksetzen (optional)
+	                    ((Graphics2D) g).setStroke(new java.awt.BasicStroke(1));
 	                    break;
 	                case DOT:
 	                    g.setColor(Color.BLACK);
@@ -103,11 +133,16 @@ public class GraphicView extends JPanel implements View {
 	    }
 
 	    // Gegner zeichnen
-	    g.setColor(Color.PINK);
 	    for (var enemy : world.getEnemies()) {
 	        int ex = enemy.getX() * w;
 	        int ey = enemy.getY() * h;
-	        g.fillOval(ex + w/6, ey + h/6, 2*w/3, 2*h/3);
+	        BufferedImage enemyImg = enemyImages.get(enemy.getName());
+	        if (enemyImg != null) {
+	            g.drawImage(enemyImg, ex, ey, w, h, null);
+	        } else {
+	            g.setColor(Color.PINK);
+	            g.fillOval(ex + w/6, ey + h/6, 2*w/3, 2*h/3);
+	        }
 	    }
 
 	    // Spieler zeichnen
