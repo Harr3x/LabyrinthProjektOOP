@@ -97,7 +97,7 @@ public class GraphicView extends JPanel implements View {
 
 	                    // Blauer Rand
 	                    g.setColor(Color.BLUE);
-	                    ((Graphics2D) g).setStroke(new java.awt.BasicStroke(3));
+	                    ((Graphics2D) g).setStroke(new java.awt.BasicStroke(1.5f));
 	                    ((Graphics2D) g).drawRoundRect(wallX, wallY, wallW, wallH, arc, arc);
 	                    // Stroke zurücksetzen (optional)
 	                    ((Graphics2D) g).setStroke(new java.awt.BasicStroke(1));
@@ -105,10 +105,11 @@ public class GraphicView extends JPanel implements View {
 	                case DOT:
 	                    g.setColor(Color.BLACK);
 	                    g.fillRect(px, py, w, h);
-	                    g.setColor(Color.YELLOW);
-	                    int dotW = w / 4;
-	                    int dotH = h / 4;
-	                    g.fillOval(px + (w - dotW) / 2, py + (h - dotH) / 2, dotW, dotH);
+	                    // Punktfarbe auf helles Pink ändern, als noch kleineres Rechteck zeichnen
+	                    g.setColor(new Color(255, 182, 193)); // Light Pink (RGB)
+	                    int dotW = w / 6;
+	                    int dotH = h / 6;
+	                    g.fillRect(px + (w - dotW) / 2, py + (h - dotH) / 2, dotW, dotH);
 	                    break;
 	                case EMPTY:
 	                default:
