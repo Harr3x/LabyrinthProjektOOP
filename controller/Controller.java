@@ -12,7 +12,9 @@ import model.Direction;
 import model.World;
 
 /**
- * Our controller listens for key events on the main window.
+ * The controller listens for key and mouse events on the main window and controls the game logic.
+ * This class extends {@link JFrame} and implements {@link KeyListener}, {@link ActionListener}, and {@link MouseListener}.
+ * It forwards relevant input to the {@link World} object.
  */
 public class Controller extends JFrame implements KeyListener, ActionListener, MouseListener {
 
@@ -20,11 +22,9 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 	private World world;
 
 	/**
-	 * Creates a new instance.
-	 * 
-	 * @param world the world to be updated whenever the player should move.
-	 * @param caged the {@link GraphicsProgram} we want to listen for key presses
-	 *              on.
+	 * Creates a new controller instance.
+	 *
+	 * @param world the {@link World} to be updated whenever the player should move.
 	 */
 	public Controller(World world) {
 		// Remember the world
@@ -37,78 +37,84 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 		addMouseListener(this);
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
 
 	/////////////////// Key Events ////////////////////////////////
 
+	/**
+	 * Called when a key is pressed. Controls the player according to the pressed key.
+	 * @param e the {@link KeyEvent} containing information about the pressed key.
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// Check if we need to do something. Tells the world to move the player.
 		switch (e.getKeyCode()) {
+
+		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
 			world.movePlayer(Direction.UP);
 			break;
 
+		case KeyEvent.VK_S:
 		case KeyEvent.VK_DOWN:
 			world.movePlayer(Direction.DOWN);
 			break;
 
+		case KeyEvent.VK_A:
 		case KeyEvent.VK_LEFT:
 			world.movePlayer(Direction.LEFT);
 			break;
 
+		case KeyEvent.VK_D:
 		case KeyEvent.VK_RIGHT:
 			world.movePlayer(Direction.RIGHT);
+			break;
+
+		case KeyEvent.VK_ESCAPE:
+			// Exit the game when the escape key is pressed.
+			System.exit(0);
+			break;
+		
+		case KeyEvent.VK_R:
+			// Reset the game when the 'R' key is pressed.
+			world.restart();
 			break;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	/////////////////// Action Events ////////////////////////////////
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/////////////////// Mouse Events ////////////////////////////////
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 
 }
