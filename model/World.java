@@ -33,6 +33,8 @@ public class World {
 	private final ArrayList<View> views = new ArrayList<>();
 	private final ArrayList<Enemy> enemies = new ArrayList<>();
 
+	private Direction playerDirection = Direction.RIGHT; // Standardrichtung
+
 
 	/**
 	 * Creates a new world with the given size.t
@@ -180,6 +182,10 @@ public class World {
     return enemies;
 }
 
+	public Direction getPlayerDirection() {
+	    return playerDirection;
+	}
+
 	public void randomStartGoal() {
 		Random rand = new Random();
 
@@ -275,11 +281,12 @@ public class World {
     int newPositionX = (getPlayerX() + direction.deltaX + width) % width;
     int newPositionY = (getPlayerY() + direction.deltaY + height) % height;
 
-	if (fields[newPositionX][newPositionY] != FieldType.WALL) {
-		setPlayerX(newPositionX);
-		setPlayerY(newPositionY);
-		moveEnemies();
-		if (newPositionX == getGoalX() && newPositionY == getGoalY()) {
+    if (fields[newPositionX][newPositionY] != FieldType.WALL) {
+        playerDirection = direction; // Richtung merken
+        setPlayerX(newPositionX);
+        setPlayerY(newPositionY);
+        moveEnemies();
+        if (newPositionX == getGoalX() && newPositionY == getGoalY()) {
 			int choice = JOptionPane.showOptionDialog(
 					null,
 					" Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",

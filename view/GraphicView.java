@@ -3,12 +3,17 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import model.Enemy;
 import model.World;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * A graphical view of the world.
@@ -24,15 +29,21 @@ public class GraphicView extends JPanel implements View {
 	private World world;
 	private int powerup = 0;
 
+	private BufferedImage playerImage;
+
 	public GraphicView(int width, int height, Dimension fieldDimension) {
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		this.fieldDimension = fieldDimension;
-		this.bg = new Rectangle(WIDTH, HEIGHT);
-	}
 
-	/** The background rectangle. */
-	private final Rectangle bg;
+		// Spielerbild laden
+		try {
+			playerImage = ImageIO.read(getClass().getResource("/resources/PlayerIcon.png"));
+		} catch (IOException | IllegalArgumentException e) {
+			System.err.println("Spielerbild konnte nicht geladen werden: " + e.getMessage());
+			playerImage = null;
+		}
+	}
 	/** The rectangle we're moving. */
 	private final Rectangle player = new Rectangle(1, 1);
 
@@ -67,7 +78,9 @@ public class GraphicView extends JPanel implements View {
 	                    g.setColor(Color.BLACK);
 	                    g.fillRect(px, py, w, h);
 	                    g.setColor(Color.YELLOW);
-	                    g.fillOval(px + w/3, py + h/3, w/3, h/3);
+	                    int dotW = w / 4;
+	                    int dotH = h / 4;
+	                    g.fillOval(px + (w - dotW) / 2, py + (h - dotH) / 2, dotW, dotH);
 	                    break;
 	                case EMPTY:
 	                default:
@@ -98,8 +111,41 @@ public class GraphicView extends JPanel implements View {
 	    }
 
 	    // Spieler zeichnen
-	    g.setColor(Color.YELLOW);
-	    g.fillArc(player.x, player.y, player.width, player.height, 30, 300);
+	    if (playerImage != null) {
+	        Graphics2D g2d = (Graphics2D) g.create();
+
+	        // Mittelpunkt berechnen
+	        int centerX = player.x + player.width / 2;
+	        int centerY = player.y + player.height / 2;
+
+	        // Winkel je nach Richtung bestimmen
+	        double angle = 0;
+	        if (world != null && world.getPlayerDirection() != null) {
+	            switch (world.getPlayerDirection()) {
+	                case RIGHT: angle = 0; break;
+	                case DOWN:  angle = Math.PI / 2; break;
+	                case LEFT:  angle = Math.PI; break;
+	                case UP:    angle = -Math.PI / 2; break;
+					case NONE:  angle = 0; break;
+	            }
+	        }
+
+	        // Um Mittelpunkt rotieren
+	        g2d.rotate(angle, centerX, centerY);
+
+	        // Bild zeichnen
+	        g2d.drawImage(
+	            playerImage,
+	            player.x, player.y,
+	            player.width, player.height,
+	            null
+	        );
+
+	        g2d.dispose();
+	    } else {
+	        g.setColor(Color.YELLOW);
+	        g.fillArc(player.x, player.y, player.width, player.height, 30, 300);
+	    }
 	}
 	
 
