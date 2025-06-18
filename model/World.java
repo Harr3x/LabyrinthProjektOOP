@@ -1,10 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import view.StartMenu;
 import view.View;
 
 import javax.swing.*;
 import java.util.Random;
+import java.awt.Frame;
 
 /**
  * The world is our model. It saves the bare minimum of information required to
@@ -12,7 +14,6 @@ import java.util.Random;
  * anything about graphics.
  */
 public class World {
-
 	/** The world's width. */
 	private final int width;
 	/** The world's height. */
@@ -24,7 +25,7 @@ public class World {
 
 	private int startX;
 	private int startY;
-
+	
 	private int goalX;
 	private int goalY;
 	private final FieldType[][] fields;
@@ -38,7 +39,7 @@ public class World {
 	/**
 	 * Creates a new world with the given size.t
 	 */
-	public World(int width, int height) {
+	public World(int width, int height, boolean isHard) {
 		// Normally, we would check the arguments for proper values
 		this.width = width;
 		this.height = height;
@@ -48,7 +49,7 @@ public class World {
 		randomStartGoal();
 		playerX= startX;
 		playerY= startY;
-		setEnemies(5);
+		setEnemies(isHard);
 
 	}
 
@@ -94,6 +95,7 @@ public class World {
 		
 		updateViews();
 	}
+	
 
 	/**
 	 * Returns the player's y position.
@@ -251,8 +253,15 @@ public class World {
 		}	
 	}
 
-	public void setEnemies(int count_enemies){
+	public void setEnemies(boolean isHard){
     enemies.clear();
+	int count_enemies;
+
+	if (isHard){
+		count_enemies = 5;
+	}else{
+		count_enemies=7;
+	}
     int enemiesX;
     int enemiesY;
     Random rand_enemies = new Random();
@@ -276,7 +285,7 @@ public class World {
 	 * 
 	 * @param direction where to move.
 	 */
-	public void movePlayer(Direction direction) {
+	public void movePlayer(Direction direction, boolean isHard) {
         int newPositionX = (getPlayerX() + direction.deltaX + width) % width;
         int newPositionY = (getPlayerY() + direction.deltaY + height) % height;
         if (fields[newPositionX][newPositionY] != FieldType.WALL) {
@@ -285,38 +294,42 @@ public class World {
             setPlayerX(newPositionX);
             setPlayerY(newPositionY);
 			checkGamestate();
-            moveEnemies();
+            moveEnemies(isHard);
             checkGamestate();
         } 
     }
 
 
 	public void restart() {
-    System.out.println("Restarting the game...");
+		for (Frame frame : Frame.getFrames()) {
+        frame.dispose();
+    	}	
+    	System.out.println("Restarting the game...");
+		new StartMenu();
     // Reset all fields
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            fields[x][y] = FieldType.EMPTY;
-        }
-    }
+    //for (int x = 0; x < width; x++) {
+    //    for (int y = 0; y < height; y++) {
+    //        fields[x][y] = FieldType.EMPTY;
+    //    }
+    //}
 
-    build_maze();
-    randomStartGoal();
+    //build_maze();
+    //randomStartGoal();
 
     // Set player position to start
-    setPlayerX(getStartX());
-    setPlayerY(getStartY());
+    //setPlayerX(getStartX());
+    //setPlayerY(getStartY());
 
-    setEnemies(5);
+    //setEnemies(5);
 
-    updateViews();
+    //updateViews();
 	}
 
 	public void checkGamestate() {
     // Prüfe, ob das Ziel erreicht wurde
     if (playerX == goalX && playerY == goalY) {
         int choice = JOptionPane.showOptionDialog(
-                null,
+			null,
                 " Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
                 "Spiel gewonnen",
                 JOptionPane.YES_NO_OPTION,
@@ -326,7 +339,10 @@ public class World {
                 "Neustart"
         );
         if (choice == JOptionPane.YES_OPTION) {
-            restart();
+			//StartMenu startMenu =new StartMenu();
+			//startMenu.setVisible(true);
+			restart();
+			
         } else if (choice == JOptionPane.NO_OPTION) {
             System.exit(0);
         }
@@ -357,36 +373,108 @@ public class World {
 
 
 
-	public void moveEnemies() {
-		Random rand_enemies = new Random();
-		for (Enemy enemy : enemies) {
-			int dx, dy;
-			int enemyX, enemyY;
-			int direction_random = rand_enemies.nextInt(4);
-			if (direction_random == 0 ){
-				dx = 1;
-				dy = 0;
-			} else if (direction_random == 1) {
-				dx = -1;
-				dy = 0;
-			} else if (direction_random == 2){
-				dx = 0;
-				dy = 1;
-			} else {
-				dx = 0;
-				dy = -1;
-			}
-			enemyX = enemy.getX() + dx;
-			enemyY = enemy.getY() + dy;
+	public void moveEnemies(boolean isHard) {
+		if (isHard == false) {
+			Random rand_enemies = new Random();
+			for (Enemy enemy : enemies) {
+				int [] dx = {-1,1,0,0};
+				int [] dy = {0,0,1,-1};
+				ArrayList<Integer> directions_dx_dy = new ArrayList<>();
 
-			if (fields[enemyX][enemyY] != FieldType.WALL){
-				enemy.setEnemyX(enemyX);
-				enemy.setEnemyY(enemyY);
+				for (int i=0; i<4; i++){
+					directions_dx_dy.add(i);
+				}
+				java.util.Collections.shuffle(directions_dx_dy, rand_enemies);
+				for ( int dir: directions_dx_dy){
+					int newenemyX = enemy.getX() + dx[dir];
+					int newenemyY = enemy.getY() + dy[dir];
+
+
+					if (fields[newenemyX][newenemyY] != FieldType.WALL) {
+						enemy.setEnemyX(newenemyX);
+						enemy.setEnemyY(newenemyY);
+						break; 
+					}
+				}	
 			}
-		}
-		updateViews();
-		checkGamestate();
-	}
+			updateViews();
+		} else {
+			int [] dx = {-1,1,0,0};
+			int [] dy = {0,0,1,-1};
+			
+			for (Enemy enemy : enemies) {
+				ArrayList<int[]> preffered_dir_x_y  = new ArrayList<>();
+				int enemyX = enemy.getX();
+				int enemyY = enemy.getY();
+				int diffX = playerX - enemyX;
+				int diffY = playerY - enemyY;
+
+				if (Math.abs(diffX)>Math.abs(diffY)){
+					if (diffX>0){
+						preffered_dir_x_y.add(new int[]{1, 0});
+					}else{
+						preffered_dir_x_y.add(new int[]{-1, 0});
+					}
+					if (diffY>0){
+						preffered_dir_x_y.add(new int[] {0,1});
+					}else{
+						preffered_dir_x_y.add(new int[] {0,-1});
+					}
+				}else{
+					if (diffY>0){
+						preffered_dir_x_y.add(new int[] {0,1});
+					}else{
+						preffered_dir_x_y.add(new int[] {0,-1});
+					}
+					if (diffX>0){
+						preffered_dir_x_y.add(new int[]{1, 0});
+					}else{
+						preffered_dir_x_y.add(new int[]{-1, 0});
+					}
+				}
+				for (int i = 0; i < 4; i++) {
+        			int[] dir = {dx[i], dy[i]};
+        			boolean alreadyAdded = false;
+					for (int[] d : preffered_dir_x_y) {
+						if (d[0] == dir[0] && d[1] == dir[1]) {
+							alreadyAdded = true;
+							break;
+						}
+					}
+					if (!alreadyAdded) {
+						preffered_dir_x_y.add(dir);
+					}
+				}
+				for (int[] direction: preffered_dir_x_y){
+					int newenemyX = enemyX + direction[0];
+					int newenemyY = enemyY + direction[1];
+
+					
+            		if (fields[newenemyX][newenemyY] != FieldType.WALL  ) {
+                		boolean isFieldFree = true;
+    					for (Enemy other : enemies) {
+        					if (other != enemy && other.getX() == newenemyX && other.getY() == newenemyY) {
+            					isFieldFree = false;
+            					break;
+        					}
+    					}
+
+						if (isFieldFree) {
+							enemy.setEnemyX(newenemyX);
+							enemy.setEnemyY(newenemyY);
+							break;
+						}
+                		
+           		    };
+
+				
+				};
+		
+			};
+			updateViews();
+		};
+	};
+	
 
 	///////////////////////////////////////////////////////////////////////////
 	// View Management

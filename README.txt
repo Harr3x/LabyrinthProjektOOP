@@ -2,16 +2,16 @@ TODO
 
 Menu Screen: Startknopf, Schwierigkeit auswählen
 
-Verloren Screen: Menu Screen mit "Sie haben verloren Nachricht"
+Verloren Screen: Menu Screen mit "Sie haben verloren Nachricht" (gibt es doch?)
 
 Schwierigkeit
-1 4 Gegner
-2 2 Gegner die verfolgen
+1 2 Gegner die verfolgen
+2 5 Gegner die verfolgen
 
 Menu logik aus move player rausnehmen
 einzeln ablegen
 
-Spieler muss Spiel verlieren wenn er selbst auf gegner tritt
+Spieler muss Spiel verlieren wenn er selbst auf gegner tritt (funktiert doch?)
 
 Gegner besser machen, nicht random moven, sondern in richtung Spieler
 

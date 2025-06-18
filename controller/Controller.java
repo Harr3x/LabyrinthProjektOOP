@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import model.Direction;
 import model.World;
+import view.StartMenu;
 
 /**
  * The controller listens for key and mouse events on the main window and controls the game logic.
@@ -20,15 +21,18 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 
 	/** The world that is updated upon every key press. */
 	private World world;
+	private JFrame frame;
+	private boolean isHard;
 
 	/**
 	 * Creates a new controller instance.
 	 *
 	 * @param world the {@link World} to be updated whenever the player should move.
 	 */
-	public Controller(World world) {
+	public Controller(World world, boolean isHard) {
 		// Remember the world
 		this.world = world;
+		this.isHard = isHard;
 		
 		// Listen for key events
 		addKeyListener(this);
@@ -51,22 +55,22 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 
 		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
-			world.movePlayer(Direction.UP);
+			world.movePlayer(Direction.UP, isHard);
 			break;
 
 		case KeyEvent.VK_S:
 		case KeyEvent.VK_DOWN:
-			world.movePlayer(Direction.DOWN);
+			world.movePlayer(Direction.DOWN, isHard);
 			break;
 
 		case KeyEvent.VK_A:
 		case KeyEvent.VK_LEFT:
-			world.movePlayer(Direction.LEFT);
+			world.movePlayer(Direction.LEFT, isHard);
 			break;
 
 		case KeyEvent.VK_D:
 		case KeyEvent.VK_RIGHT:
-			world.movePlayer(Direction.RIGHT);
+			world.movePlayer(Direction.RIGHT, isHard);
 			break;
 
 		case KeyEvent.VK_ESCAPE:
@@ -84,6 +88,8 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 	@Override
 	public void keyReleased(KeyEvent e) {
 	}
+
+	
 
 	/////////////////// Action Events ////////////////////////////////
 
