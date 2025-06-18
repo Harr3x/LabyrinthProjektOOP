@@ -22,7 +22,7 @@ public enum Direction {
 
 	/**
 	 * Creates a new direction with the given movement values.
-	 * 
+	 *
 	 * @param deltaX The amount to move in the X direction.
 	 * @param deltaY The amount to move in the Y direction.
 	 */
