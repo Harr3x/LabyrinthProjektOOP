@@ -276,37 +276,19 @@ public class World {
 	 * 
 	 * @param direction where to move.
 	 */
-	public void movePlayer(Direction direction) {	
-    int newPositionX = (getPlayerX() + direction.deltaX + width) % width;
-    int newPositionY = (getPlayerY() + direction.deltaY + height) % height;
-
-    if (fields[newPositionX][newPositionY] != FieldType.WALL) {
-        playerDirection = direction; // Richtung merken
-		fields[getPlayerX()][getPlayerY()] = FieldType.EMPTY;
-        setPlayerX(newPositionX);
-        setPlayerY(newPositionY);
-        moveEnemies();
-        if (newPositionX == getGoalX() && newPositionY == getGoalY()) {
-			int choice = JOptionPane.showOptionDialog(
-					null,
-					" Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
-					"Spiel gewonnen",
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.INFORMATION_MESSAGE,
-					null,
-					new String[] { "Neustart", "Beenden" },
-					"Neustart"
-			);
-			if (choice == JOptionPane.YES_OPTION) {
-				restart();
-			} else if (choice == JOptionPane.NO_OPTION) {
-				System.exit(0);
-			}
-		} else {
-			updateViews();
-		}
-	}
-}
+	public void movePlayer(Direction direction) {
+        int newPositionX = (getPlayerX() + direction.deltaX + width) % width;
+        int newPositionY = (getPlayerY() + direction.deltaY + height) % height;
+        if (fields[newPositionX][newPositionY] != FieldType.WALL) {
+            playerDirection = direction; // Richtung merken
+            fields[getPlayerX()][getPlayerY()] = FieldType.EMPTY;
+            setPlayerX(newPositionX);
+            setPlayerY(newPositionY);
+			checkGamestate();
+            moveEnemies();
+            checkGamestate();
+        } 
+    }
 
 
 	public void restart() {
@@ -328,6 +310,49 @@ public class World {
     setEnemies(5);
 
     updateViews();
+	}
+
+	public void checkGamestate() {
+    // Prüfe, ob das Ziel erreicht wurde
+    if (playerX == goalX && playerY == goalY) {
+        int choice = JOptionPane.showOptionDialog(
+                null,
+                " Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
+                "Spiel gewonnen",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new String[] { "Neustart", "Beenden" },
+                "Neustart"
+        );
+        if (choice == JOptionPane.YES_OPTION) {
+            restart();
+        } else if (choice == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        }
+        return;
+    }
+    // Prüfe, ob ein Gegner auf dem Spieler steht
+    for (Enemy enemy : enemies) {
+        if (enemy.getX() == playerX && enemy.getY() == playerY) {
+            int choice = JOptionPane.showOptionDialog(
+                    null,
+                    " Du hast das Spiel verloren! \n Was möchtest du nun tun?",
+                    "Spiel verloren",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    new String[] { "Neustart", "Beenden" },
+                    "Neustart"
+            );
+            if (choice == JOptionPane.YES_OPTION) {
+                restart();
+            } else if (choice == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+            return;
+        }
+    }
 }
 
 
@@ -358,28 +383,9 @@ public class World {
 				enemy.setEnemyX(enemyX);
 				enemy.setEnemyY(enemyY);
 			}
-			if (enemy.getX() == playerX && enemy.getY() == playerY) {
-				int choice = JOptionPane.showOptionDialog(
-						null,
-						" Du hast das Spiel verloren! \n Was möchtest du nun tun?",
-						"Spiel verloren",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.INFORMATION_MESSAGE,
-						null,
-						new String[] { "Neustart", "Beenden" },
-						"Neustart"
-				);
-				if (choice == JOptionPane.YES_OPTION) {
-					restart();
-				} else if (choice == JOptionPane.NO_OPTION) {
-					System.exit(0);
-				}
-			}
-			
 		}
 		updateViews();
-
-
+		checkGamestate();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
