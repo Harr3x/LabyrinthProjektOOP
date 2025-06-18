@@ -41,55 +41,65 @@ public class GraphicView extends JPanel implements View {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		// Paint background
-		g.setColor(Color.BLACK);
-		g.fillRect(bg.x, bg.y, bg.width, bg.height);
-		// Paint world
-		var fields = world.getFields();
-		for (int x = 0; x<fields.length; x++) {
-			for (int y = 0; y<fields[0].length;y++) {
-				if (fields[x][y] == model.FieldType.WALL) {
-					g.setColor(Color.BLUE);
-					g.fillRect(
-							x * fieldDimension.width,
-							y * fieldDimension.height,
-							fieldDimension.width,
-							fieldDimension.height);
-				} else if (fields[x][y] == model.FieldType.GOAL) {
-					g.setColor(Color.RED);
-					g.fillRect(
-							x * fieldDimension.width,
-							y * fieldDimension.height,
-							fieldDimension.width,
-							fieldDimension.height);
-				} else if (fields[x][y] == model.FieldType.PLAYER) {
-					g.setColor(Color.YELLOW);
-					g.fillOval(
-							x * fieldDimension.width,
-							y * fieldDimension.height,
-							fieldDimension.width,
-							fieldDimension.height);
-				}
+	    super.paint(g);
+	    if (world == null) return;
 
-			}
-		}
-		// Paint Start
-		g.setColor(Color.WHITE);
-		g.fillRect(
-				world.getStartX() * fieldDimension.width,
-				world.getStartY() * fieldDimension.height,
-				fieldDimension.width,
-				fieldDimension.height);
-		// Paint Enemy
-		g.setColor(Color.MAGENTA); // z.B. für Gegner
-		for (Enemy enemy : world.getEnemies()) {
-    		g.fillOval(
-        	enemy.getX() * fieldDimension.width,
-        	enemy.getY() * fieldDimension.height,
-        	fieldDimension.width,
-        	fieldDimension.height
-    		);
-		}
+	    // Hintergrund
+	    g.setColor(Color.BLACK);
+	    g.fillRect(0, 0, WIDTH, HEIGHT);
+
+	    var fields = world.getFields();
+	    int w = fieldDimension.width;
+	    int h = fieldDimension.height;
+
+	    // Felder zeichnen
+	    for (int x = 0; x < world.getWidth(); x++) {
+	        for (int y = 0; y < world.getHeight(); y++) {
+	            int px = x * w;
+	            int py = y * h;
+
+	            switch (fields[x][y]) {
+	                case WALL:
+	                    g.setColor(Color.BLUE);
+	                    g.fillRect(px, py, w, h);
+	                    break;
+	                case DOT:
+	                    g.setColor(Color.BLACK);
+	                    g.fillRect(px, py, w, h);
+	                    g.setColor(Color.YELLOW);
+	                    g.fillOval(px + w/3, py + h/3, w/3, h/3);
+	                    break;
+	                case EMPTY:
+	                default:
+	                    g.setColor(Color.BLACK);
+	                    g.fillRect(px, py, w, h);
+	                    break;
+	            }
+
+	            // Startfeld markieren
+	            if (x == world.getStartX() && y == world.getStartY()) {
+	                g.setColor(Color.GREEN);
+	                g.drawRect(px+2, py+2, w-4, h-4);
+	            }
+	            // Zielfeld markieren
+	            if (x == world.getGoalX() && y == world.getGoalY()) {
+	                g.setColor(Color.RED);
+	                g.drawRect(px+4, py+4, w-8, h-8);
+	            }
+	        }
+	    }
+
+	    // Gegner zeichnen
+	    g.setColor(Color.PINK);
+	    for (var enemy : world.getEnemies()) {
+	        int ex = enemy.getX() * w;
+	        int ey = enemy.getY() * h;
+	        g.fillOval(ex + w/6, ey + h/6, 2*w/3, 2*h/3);
+	    }
+
+	    // Spieler zeichnen
+	    g.setColor(Color.YELLOW);
+	    g.fillArc(player.x, player.y, player.width, player.height, 30, 300);
 	}
 	
 

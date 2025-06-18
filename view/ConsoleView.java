@@ -13,23 +13,22 @@ public class ConsoleView implements View {
 	public void update(World world) {
 		var fields = world.getFields();
 
-		// The player's position
-		//int playerX = world.getPlayerX();
-		//int playerY = world.getPlayerY();
 		for (int y = 0; y < fields[0].length; y++) {
 			for (int x = 0; x < fields.length; x++) {
-				if (fields[x][y] == FieldType.PLAYER){
-					System.out.print("P");
-				} else if (fields[x][y] == FieldType.WALL){
-					System.out.print("#");
-				} else if (x == world.getStartX() && y == world.getStartY()){
-					System.out.print("S");
-				} else if (fields[x][y] == FieldType.GOAL){
-					System.out.print("G");
-				} else if (fields[x][y] == FieldType.ENEMY){
-					System.out.print("E");
-				} else {
-					System.out.print(".");
+				if (x == world.getPlayerX() && y == world.getPlayerY()) {
+					System.out.print("[P]");
+				} else if (isEnemyAt(world, x, y)) {
+					System.out.print("[E]");
+				} else if (fields[x][y] == FieldType.WALL) {
+					System.out.print("[#]");
+				} else if (x == world.getStartX() && y == world.getStartY()) {
+					System.out.print("[S]");
+				} else if (x == world.getGoalX() && y == world.getGoalY()) {
+					System.out.print("[G]");
+				} else if (fields[x][y] == FieldType.DOT) {
+					System.out.print("[.]");
+				} else if (fields[x][y] == FieldType.EMPTY) {
+					System.out.print("[ ]");
 				}
 			}
 			// A newline between every row
@@ -38,6 +37,16 @@ public class ConsoleView implements View {
 
 		// A newline between every update
 		System.out.println();
+	}
+
+	// Hilfsmethode zum Prüfen, ob ein Enemy auf (x, y) steht
+	private boolean isEnemyAt(World world, int x, int y) {
+		for (var enemy : world.getEnemies()) {
+			if (enemy.getX() == x && enemy.getY() == y) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 
