@@ -282,6 +282,7 @@ public class World {
 
     if (fields[newPositionX][newPositionY] != FieldType.WALL) {
         playerDirection = direction; // Richtung merken
+		fields[getPlayerX()][getPlayerY()] = FieldType.EMPTY;
         setPlayerX(newPositionX);
         setPlayerY(newPositionY);
         moveEnemies();
