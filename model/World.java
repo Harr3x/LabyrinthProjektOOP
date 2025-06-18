@@ -253,19 +253,19 @@ public class World {
 	}
 
 	public void setEnemies(int count_enemies){
-		enemies.clear();
-		int enemiesX;
-		int enemiesY;
-		Random rand_enemies = new Random();
-		for (int i = 1; i < count_enemies; i++) {
-			do { 
-				enemiesX = rand_enemies.nextInt(width - 2)+1;
-				enemiesY = rand_enemies.nextInt(height -2) +1 ;
-			} while (fields[enemiesX][enemiesY] != FieldType.DOT || (enemiesX == playerX && enemiesY == playerY));
-			enemies.add(new Enemy(enemiesX, enemiesY));
-		}
-
-
+    enemies.clear();
+    int enemiesX;
+    int enemiesY;
+    Random rand_enemies = new Random();
+    // Liste der Farbnamen für die Gegner
+    String[] names = {"red", "cyan", "orange", "pink"};
+    for (int i = 0; i < count_enemies - 1 && i < names.length; i++) {
+        do { 
+            enemiesX = rand_enemies.nextInt(width - 2)+1;
+            enemiesY = rand_enemies.nextInt(height -2) +1 ;
+        } while (fields[enemiesX][enemiesY] != FieldType.DOT || (enemiesX == playerX && enemiesY == playerY));
+        enemies.add(new Enemy(enemiesX, enemiesY, names[i]));
+    }
 	}
 
 
@@ -354,10 +354,9 @@ public class World {
 			enemyX = enemy.getX() + dx;
 			enemyY = enemy.getY() + dy;
 
-			if (enemyX >0 && enemyX < (width-1) && enemyY >0 && enemyY < (height-1) && fields[enemyX][enemyY] != FieldType.WALL){
+			if (fields[enemyX][enemyY] != FieldType.WALL){
 				enemy.setEnemyX(enemyX);
 				enemy.setEnemyY(enemyY);
-				// fields[enemyX][enemyY] = FieldType.ENEMY;
 			}
 			if (enemy.getX() == playerX && enemy.getY() == playerY) {
 				int choice = JOptionPane.showOptionDialog(
