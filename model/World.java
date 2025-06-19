@@ -370,6 +370,7 @@ public class World {
 	 * @param isHard true if the game should be in hard mode, false otherwise
 	 */
 	public void moveEnemies(boolean isHard) {
+		// direction of enemies random
 		if (isHard == false) {
 			Random rand_enemies = new Random();
 			for (Enemy enemy : enemies) {
@@ -396,6 +397,7 @@ public class World {
 			}
 			updateViews();
 		} else {
+			// enemies chasing the player
 			int [] dx = {-1,1,0,0};
 			int [] dy = {0,0,1,-1};
 			
@@ -433,14 +435,14 @@ public class World {
 				// Add remaining directions not already in the preferred list
 				for (int i = 0; i < 4; i++) {
         			int[] dir = {dx[i], dy[i]};
-        			boolean alreadyAdded = false;
+        			boolean alreadyInList = false;
 					for (int[] d : preferred_dir_x_y) {
 						if (d[0] == dir[0] && d[1] == dir[1]) {
-							alreadyAdded = true;
+							alreadyInList = true;
 							break;
 						}
 					}
-					if (!alreadyAdded) {
+					if (!alreadyInList) {
 						preferred_dir_x_y.add(dir);
 					}
 				}
