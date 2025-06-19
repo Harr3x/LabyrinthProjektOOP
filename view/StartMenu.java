@@ -81,6 +81,7 @@ public class StartMenu extends JFrame {
         startButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         centerPanel.add(startButton, gbc);
         startButton.addActionListener(e -> startClicked());
+        startButton.setOpaque(true);
 
         // 2nd row: vertical space (placeholder)
         gbc.gridy = 1;

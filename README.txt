@@ -40,5 +40,5 @@ Documentation:
 The documentation can be found at ./doc and viewed via index.html
 The project includes in-code documentation.
 
-Used Java version: openjdk version "21.0.7" 2025-04-15
+Used Java version: openjdk version "21.0.7" 
 Used IDE: VS-Code
