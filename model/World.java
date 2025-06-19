@@ -5,6 +5,9 @@ import view.StartMenu;
 import view.View;
 
 import javax.swing.*;
+
+import controller.Labyrinth;
+
 import java.util.Random;
 import java.awt.Frame;
 
@@ -254,26 +257,20 @@ public class World {
 	}
 
 	public void setEnemies(boolean isHard){
-    enemies.clear();
-	int count_enemies;
-
-	if (isHard){
-		count_enemies = 5;
-	}else{
-		count_enemies=7;
-	}
-    int enemiesX;
-    int enemiesY;
-    Random rand_enemies = new Random();
-    // Liste der Farbnamen für die Gegner
-    String[] names = {"red", "cyan", "orange", "pink"};
-    for (int i = 0; i < count_enemies - 1 && i < names.length; i++) {
-        do { 
-            enemiesX = rand_enemies.nextInt(width - 2)+1;
-            enemiesY = rand_enemies.nextInt(height -2) +1 ;
-        } while (fields[enemiesX][enemiesY] != FieldType.DOT || (enemiesX == playerX && enemiesY == playerY));
-        enemies.add(new Enemy(enemiesX, enemiesY, names[i]));
-    }
+    	enemies.clear();
+		int count_enemies = 4;
+    	int enemiesX;
+    	int enemiesY;
+    	Random rand_enemies = new Random();
+    	// Liste der Farbnamen für die Gegner
+    	String[] names = {"red", "cyan", "orange", "pink"};
+    	for (int i = 0; i < count_enemies && i < names.length; i++) {
+    	    do {
+    	        enemiesX = rand_enemies.nextInt(width - 2) + 1;
+    	        enemiesY = rand_enemies.nextInt(height - 2) + 1;
+    	    } while (fields[enemiesX][enemiesY] != FieldType.DOT || (enemiesX == playerX && enemiesY == playerY));
+    	    enemies.add(new Enemy(enemiesX, enemiesY, names[i]));
+    	}
 	}
 
 
@@ -300,72 +297,28 @@ public class World {
     }
 
 
-	public void restart() {
+	public void restart(Boolean gameState) {
+		System.out.println("Restarting the game...");
 		for (Frame frame : Frame.getFrames()) {
         frame.dispose();
-    	}	
-    	System.out.println("Restarting the game...");
-		new StartMenu();
-    // Reset all fields
-    //for (int x = 0; x < width; x++) {
-    //    for (int y = 0; y < height; y++) {
-    //        fields[x][y] = FieldType.EMPTY;
-    //    }
-    //}
-
-    //build_maze();
-    //randomStartGoal();
-
-    // Set player position to start
-    //setPlayerX(getStartX());
-    //setPlayerY(getStartY());
-
-    //setEnemies(5);
-
-    //updateViews();
+		}
+		Labyrinth.getStartMenu().setGameState(gameState);
+		Labyrinth.getStartMenu().setVisible(true);
 	}
 
 	public void checkGamestate() {
+		Boolean gameState = null;
     // Prüfe, ob das Ziel erreicht wurde
     if (playerX == goalX && playerY == goalY) {
-        int choice = JOptionPane.showOptionDialog(
-			null,
-                " Du hast das Spiel gewonnen! \n Was möchtest du nun tun?",
-                "Spiel gewonnen",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                new String[] { "Neustart", "Beenden" },
-                "Neustart"
-        );
-        if (choice == JOptionPane.YES_OPTION) {
-			//StartMenu startMenu =new StartMenu();
-			//startMenu.setVisible(true);
-			restart();
-			
-        } else if (choice == JOptionPane.NO_OPTION) {
-            System.exit(0);
-        }
-        return;
+		gameState = true;
+		restart(gameState);
+		return;
     }
     // Prüfe, ob ein Gegner auf dem Spieler steht
     for (Enemy enemy : enemies) {
         if (enemy.getX() == playerX && enemy.getY() == playerY) {
-            int choice = JOptionPane.showOptionDialog(
-                    null,
-                    " Du hast das Spiel verloren! \n Was möchtest du nun tun?",
-                    "Spiel verloren",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                    null,
-                    new String[] { "Neustart", "Beenden" },
-                    "Neustart"
-            );
-            if (choice == JOptionPane.YES_OPTION) {
-                restart();
-            } else if (choice == JOptionPane.NO_OPTION) {
-                System.exit(0);
-            }
+			gameState = false;
+            restart(gameState);
             return;
         }
     }
