@@ -1,12 +1,13 @@
 package controller;
 
 import java.awt.Dimension;
-import view.StartMenu;
+
 import javax.swing.JFrame;
 
-import model.World;
 import view.ConsoleView;
 import view.GraphicView;
+import view.StartMenu;
+import model.World;
 
 /**
  * Main class of the game. Responsible for initializing and connecting the MVC components.
