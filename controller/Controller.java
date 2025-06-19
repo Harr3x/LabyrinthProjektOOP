@@ -80,7 +80,7 @@ public class Controller extends JFrame implements KeyListener, ActionListener, M
 		
 		case KeyEvent.VK_R:
 			// Reset the game when the 'R' key is pressed.
-			world.restart();
+			world.restart(null);
 			break;
 		}
 	}
