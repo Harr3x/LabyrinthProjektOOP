@@ -19,7 +19,9 @@ public class Labyrinth {
     /** Height of the game board */
     private static final int BOARD_HEIGHT = 30;
     /** Size of a field. */
-    private static final int FIELD_SIZE = 30;
+    private static final int FIELD_SIZE = 25;
+
+    private static StartMenu startMenu;
 
     /**
      * Entry point of the program. Initializes the world, the views, and the controller.
@@ -28,9 +30,11 @@ public class Labyrinth {
      */
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new StartMenu();
-    });
-    };
+            int width = BOARD_WIDTH * FIELD_SIZE;
+            int height = BOARD_HEIGHT * FIELD_SIZE;
+            Labyrinth.startMenu = new StartMenu(width, height);
+        });
+    }
     
 
     public static void startGame(boolean isHard){
@@ -65,9 +69,13 @@ public class Labyrinth {
             controller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             controller.getContentPane().add(gview);
             controller.pack();
+            controller.setLocationRelativeTo(null);
             controller.setVisible(true);
             controller.requestFocusInWindow();
         }
-        
+
+    public static StartMenu getStartMenu() {
+        return startMenu;
+    }
 }
 
