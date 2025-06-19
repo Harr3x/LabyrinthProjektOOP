@@ -6,13 +6,13 @@ import model.FieldType;
 /**
  * A view that prints the current state of the world to the console upon every
  * update.
- * Legende: 
- * [P] = Player 
- * [E] = Enemy 
- * [#] = Wall 
- * [S] = Start 
- * [G] = Goal 
- * [.] = Dot 
+ * Legend:
+ * [P] = Player
+ * [E] = Enemy
+ * [#] = Wall
+ * [S] = Start
+ * [G] = Goal
+ * [.] = Dot
  * [ ] = Empty
  */
 public class ConsoleView implements View {
@@ -27,7 +27,7 @@ public class ConsoleView implements View {
 
 		for (int y = 0; y < fields[0].length; y++) {
 			for (int x = 0; x < fields.length; x++) {
-				System.out.print(getFieldSymbol(x, y, world));
+				System.out.print(getFieldSymbol(x, y, world)); // Print symbol for each field
 			}
 			// A newline between every row
 			System.out.println();
@@ -47,21 +47,21 @@ public class ConsoleView implements View {
 	private String getFieldSymbol(int x, int y, World world) {
 		var fields = world.getFields();
 		if (x == world.getPlayerX() && y == world.getPlayerY()) {
-			return "[P]";
+			return "[P]"; // Player position
 		} else if (isEnemyAt(world, x, y)) {
-			return "[E]";
+			return "[E]"; // Enemy position
 		} else if (fields[x][y] == FieldType.WALL) {
-			return "[#]";
+			return "[#]"; // Wall
 		} else if (x == world.getStartX() && y == world.getStartY()) {
-			return "[S]";
+			return "[S]"; // Start position
 		} else if (x == world.getGoalX() && y == world.getGoalY()) {
-			return "[G]";
+			return "[G]"; // Goal position
 		} else if (fields[x][y] == FieldType.DOT) {
-			return "[.]";
+			return "[.]"; // Dot
 		} else if (fields[x][y] == FieldType.EMPTY) {
-			return "[ ]";
+			return "[ ]"; // Empty field
 		}
-		return "[?]";
+		return "[?]"; // Unknown field type
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class ConsoleView implements View {
 	private boolean isEnemyAt(World world, int x, int y) {
 		for (var enemy : world.getEnemies()) {
 			if (enemy.getX() == x && enemy.getY() == y) {
-				return true;
+				return true; // Found an enemy at (x, y)
 			}
 		}
 		return false;

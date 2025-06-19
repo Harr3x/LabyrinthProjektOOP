@@ -13,6 +13,6 @@ public interface View {
 	 * 
 	 * @param world the {@link World} object which called this method.
 	 */
-	void update(World world);
+	void update(World world); // This method will be called by the model (World) to notify the view of changes
 
 }

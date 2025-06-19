@@ -40,6 +40,11 @@ public class GraphicView extends JPanel implements View {
 	private Map<String, BufferedImage> enemyImages = new HashMap<>();
 
 	/**
+	 * The rectangle representing the player's position and size on the board.
+	 */
+	private final Rectangle player = new Rectangle(1, 1);
+
+	/**
 	 * Constructs a new GraphicView with the given size and field dimensions.
 	 * Loads all necessary images for the player and enemies.
 	 *
@@ -56,7 +61,7 @@ public class GraphicView extends JPanel implements View {
 		try {
 			playerImage = ImageIO.read(getClass().getResource("/resources/pacman.png"));
 		} catch (IOException | IllegalArgumentException e) {
-			System.err.println("Spielerbild konnte nicht geladen werden: " + e.getMessage());
+			System.err.println("Could not load player image: " + e.getMessage());
 			playerImage = null;
 		}
 		// Load enemy images
@@ -66,13 +71,9 @@ public class GraphicView extends JPanel implements View {
 			enemyImages.put("cyan", ImageIO.read(getClass().getResource("/resources/cyanGhost.png")));
 			enemyImages.put("orange", ImageIO.read(getClass().getResource("/resources/orangeGhost.png")));
 		} catch (IOException | IllegalArgumentException e) {
-			System.err.println("Gegnerbild konnte nicht geladen werden: " + e.getMessage());
+			System.err.println("Could not load enemy image: " + e.getMessage());
 		}
 	}
-	/**
-	 * The rectangle representing the player's position and size on the board.
-	 */
-	private final Rectangle player = new Rectangle(1, 1);
 
 	/**
 	 * Paints the entire game view, including the maze, player, and enemies.

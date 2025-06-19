@@ -14,13 +14,14 @@ import view.GraphicView;
  */
 public class Labyrinth {
 
-    /** Width of the game board */
+    /** Width of the game board. */
     private static final int BOARD_WIDTH = 28;
-    /** Height of the game board */
+    /** Height of the game board. */
     private static final int BOARD_HEIGHT = 30;
     /** Size of a field. */
     private static final int FIELD_SIZE = 25;
 
+    /** The start menu of the game. */
     private static StartMenu startMenu;
 
     /**
@@ -30,50 +31,55 @@ public class Labyrinth {
      */
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            int width = BOARD_WIDTH * FIELD_SIZE;
-            int height = BOARD_HEIGHT * FIELD_SIZE;
-            Labyrinth.startMenu = new StartMenu(width, height);
+            int width = BOARD_WIDTH * FIELD_SIZE; // Calculate window width in pixels
+            int height = BOARD_HEIGHT * FIELD_SIZE; // Calculate window height in pixels
+            Labyrinth.startMenu = new StartMenu(width, height); // Show start menu
         });
     }
-    
 
+    /**
+     * Starts the game by creating the world, views, and controller, and initializing the game window.
+     *
+     * @param isHard true if the game should be in hard mode, false otherwise
+     */
     public static void startGame(boolean isHard){
-           // public void run() {
-                // Dimension of the game board
-            int width = BOARD_WIDTH;
-            int height = BOARD_HEIGHT;
-                // Create a new game world.
-            World world = new World(width, height, isHard);
+        // Dimension of the game board (in fields)
+        int width = BOARD_WIDTH;
+        int height = BOARD_HEIGHT;
+        // Create a new game world (model)
+        World world = new World(width, height, isHard);
+        // Size of a field in the graphical view (in pixels)
+        Dimension fieldDimensions = new Dimension(FIELD_SIZE, FIELD_SIZE);
+        // Create and register graphical view (GUI)
+        GraphicView gview = new GraphicView(
+                width * fieldDimensions.width,
+                height * fieldDimensions.height,
+                fieldDimensions);
+        gview.setPreferredSize(new Dimension(
+                width * fieldDimensions.width,
+                height * fieldDimensions.height));
+        world.registerView(gview); // Register the graphical view as an observer
+        gview.setVisible(true);
+        // Create and register console view (prints to terminal)
+        ConsoleView cview = new ConsoleView();
+        world.registerView(cview); // Register the console view as an observer
+        // Create controller and initialize JFrame (window)
+        Controller controller = new Controller(world, isHard); // Handles user input
+        controller.setTitle("Päc-Man");
+        controller.setResizable(false);
+        controller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        controller.getContentPane().add(gview); // Add graphical view to window
+        controller.pack(); // Fit window to preferred size
+        controller.setLocationRelativeTo(null); // Center window
+        controller.setVisible(true);
+        controller.requestFocusInWindow(); // Ensure key events are received
+    }
 
-                // Size of a field in the graphical view.
-            Dimension fieldDimensions = new Dimension(FIELD_SIZE, FIELD_SIZE);
-                // Create and register graphical view.
-            GraphicView gview = new GraphicView(
-                    width * fieldDimensions.width,
-                    height * fieldDimensions.height,
-                    fieldDimensions);
-            gview.setPreferredSize(new Dimension( // für swing
-                    width * fieldDimensions.width,
-                    height * fieldDimensions.height));
-            world.registerView(gview);
-            gview.setVisible(true);
-
-                // Create and register console view.
-            ConsoleView cview = new ConsoleView();
-            
-            world.registerView(cview);
-                // Create controller and initialize JFrame.
-            Controller controller = new Controller(world, isHard);
-            controller.setTitle("Päc-Man");
-            controller.setResizable(false);
-            controller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            controller.getContentPane().add(gview);
-            controller.pack();
-            controller.setLocationRelativeTo(null);
-            controller.setVisible(true);
-            controller.requestFocusInWindow();
-        }
-
+    /**
+     * Returns the start menu instance.
+     *
+     * @return the {@link StartMenu} instance
+     */
     public static StartMenu getStartMenu() {
         return startMenu;
     }

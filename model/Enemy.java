@@ -53,7 +53,7 @@ public class Enemy {
      * @param enemyX the new x position
      */
     public void setEnemyX(int enemyX) {
-        this.enemyX = enemyX;
+        this.enemyX = enemyX; // Update enemy's x coordinate
     }
 
     /**
@@ -61,7 +61,7 @@ public class Enemy {
      * @param enemyY the new y position
      */
     public void setEnemyY(int enemyY) {
-        this.enemyY = enemyY;
+        this.enemyY = enemyY; // Update enemy's y coordinate
     }
 
     /**
@@ -69,6 +69,6 @@ public class Enemy {
      * @param name the new name
      */
     public void setName(String name) {
-        this.name = name;
+        this.name = name; // Update enemy's name/type
     }
 }

@@ -30,4 +30,20 @@ public enum Direction {
 		this.deltaX = deltaX;
 		this.deltaY = deltaY;
 	}
+
+	/**
+	 * Gets the amount to move in the X direction for this direction.
+	 * @return the X movement delta
+	 */
+	public int getDeltaX() {
+		return deltaX; // Returns -1, 0, or 1 depending on direction
+	}
+
+	/**
+	 * Gets the amount to move in the Y direction for this direction.
+	 * @return the Y movement delta
+	 */
+	public int getDeltaY() {
+		return deltaY; // Returns -1, 0, or 1 depending on direction
+	}
 }

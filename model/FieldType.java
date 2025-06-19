@@ -12,5 +12,5 @@ public enum FieldType {
     /** An impassable field (the maze walls). */
     WALL,
     /** A field with a collectible dot (for points). */
-    DOT
+    DOT // Player can collect this for points
 }
