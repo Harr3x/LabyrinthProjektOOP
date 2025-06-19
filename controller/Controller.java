@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 
 import model.Direction;
 import model.World;
-import view.StartMenu;
 
 /**
  * The controller listens for key and mouse events on the main window and controls the game logic.

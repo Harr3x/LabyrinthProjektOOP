@@ -1,10 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import view.StartMenu;
 import view.View;
-
-import javax.swing.*;
 
 import controller.Labyrinth;
 
