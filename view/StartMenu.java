@@ -5,9 +5,6 @@ import javax.swing.*;
 import controller.Labyrinth;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 
 public class StartMenu extends JFrame {
     private JRadioButton easyButton;
@@ -122,7 +119,10 @@ public class StartMenu extends JFrame {
         setVisible(true);
     }
 
-    public void startGame(boolean isHard) {
+    public void startGame(Boolean isHard) {
+        if (isHard == null) {
+            isHard = false; // Default to easy if not
+        }
         System.out.println("Spiel gestartet. Schwierigkeit: " + (isHard ? "Schwer" : "Leicht"));
         Labyrinth.startGame(isHard);
     
